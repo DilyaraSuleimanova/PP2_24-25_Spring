@@ -26,8 +26,10 @@ if "apple" in thislist:
 thislist = ["apple", "banana", "cherry", "orange"]
 thislist[1] = "blackcurrant"
 print(thislist)
+
 thislist[1:3] = ["redcurrant", "watermelon"]
 print(thislist)
+
 thislist[1:2] = ["kiwi", "melon", "mango"]
 print(thislist)
 
@@ -37,6 +39,7 @@ thislist = ["apple", "banana", "cherry", "watermelon"]
 thislist.insert(2, "watermelon")
 thislist.append("orange")
 print(thislist)
+
 tropical = ["mango", "pineapple", "papaya"]
 thislist.extend(tropical) # extend() can add any iterable object (tuples, sets, dictionaries etc.)
 print(thislist)
@@ -47,6 +50,7 @@ thislist.remove("watermelon")
 thislist.pop(1) # If do not specify the index, the pop() method removes the last item
 del thislist[0] # The del keyword can also delete the list completely
 print(thislist) 
+
 thislist.clear() # Empty the list
 print(thislist)
 
@@ -63,6 +67,7 @@ fruits = ["apple", "banana", "cherry", "kiwi", "mango"]
 # newlist = [expression for item in iterable if condition == True]
 newlist = [x for x in fruits if "a" in x]
 print(newlist)
+
 ''' SAME AS:
 newlist = []
 for x in fruits:
@@ -80,8 +85,10 @@ newlist = [x if x != "banana" else "orange" for x in fruits]
 thislist = ["orange", "mango", "kiwi"]
 thislist.reverse() # regardless of the alphabet
 print(thislist)
+
 thislist.sort() # case sensitive; "thislist.sort(key = str.lower)" if start with lower case
 print(thislist)
+
 thislist.sort(reverse = True) # desc. order
 print(thislist)
 
