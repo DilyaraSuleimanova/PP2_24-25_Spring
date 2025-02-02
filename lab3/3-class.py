@@ -101,22 +101,9 @@
 #             self.balance -= amount
 #         print("Your balance: ", self.balance, "\n")
 
-#     def choices(self):
-#         exit_key = ""
-#         while exit_key != "3":
-#             choice = input("Choose option (1 - 3):\n\t1. Deposit \n\t2. Withdraw \n\t3. Finish operation\n")
-
-#             if choice == "1":
-#                 self.deposit()
-#             elif choice == "2":
-#                 self.withdraw()
-#             elif choice == "3":
-#                 break
-#             else:
-#                 print("Please choose again.")
-
 # acc = Account()
-# acc.choices()
+# acc.deposit()
+# acc.withdraw()
 
 
 # # 6 task
