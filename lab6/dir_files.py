@@ -27,7 +27,6 @@ else:
 file_path = input("Enter the file path: ")
 if os.path.exists(file_path):
     with open(file_path, 'r') as file:
-        # print("Number of lines:", sum(1 for line in file))
         summa = sum([1 for item in file.readlines()])
         print("Number of lines: ", summa)
 
