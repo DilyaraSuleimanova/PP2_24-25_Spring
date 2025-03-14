@@ -4,7 +4,7 @@ import time
 
 pygame.init()
 
-width = 500
+width = 700
 height = 500
 center = (width // 2, height // 2)
 
@@ -14,10 +14,10 @@ img_clock = pygame.image.load("clock.png")
 img_clock = pygame.transform.scale(img_clock, (width, height))
 
 img_min_hand = pygame.image.load("min_hand.png")
-img_min_hand = pygame.transform.scale(img_min_hand, (100, 50))
+img_min_hand = pygame.transform.scale(img_min_hand, (750, 300))
 
 img_sec_hand = pygame.image.load("sec_hand.png")
-img_sec_hand = pygame.transform.scale(img_sec_hand, (100, 50))
+img_sec_hand = pygame.transform.scale(img_sec_hand, (600, 300))
 
 running = True
 
@@ -34,19 +34,17 @@ while running:
     minutes = current_time.tm_min 
     seconds = current_time.tm_sec 
     
-    min_angle = (minutes % 60) * 6  
-    sec_angle = (seconds % 60) * 6 
+    min_angle = (minutes % 60) * 6 + 60
+    sec_angle = (seconds % 60) * 6 - 50
     
     rotate_min_hand = pygame.transform.rotate(img_min_hand, -min_angle)
-    rect_min = rotate_min_hand.get_rect(center=center)
-    
     rotate_sec_hand = pygame.transform.rotate(img_sec_hand, -sec_angle)
+    
+    rect_min = rotate_min_hand.get_rect(center=center)
     rect_sec = rotate_sec_hand.get_rect(center=center)
     
     screen.blit(rotate_min_hand,  rect_min.topleft)
     screen.blit(rotate_sec_hand, rect_sec.topleft)
     
-    
-
     pygame.display.flip()
     clock.tick(60)
