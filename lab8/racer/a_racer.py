@@ -168,3 +168,5 @@ while running:
 
     pygame.display.flip() # update screen
     clock.tick(FPS) # 60 frames per sec
+
+pygame.quit()
