@@ -1,16 +1,9 @@
 import pygame
 import random
 import time
-import psycopg2
+import db_snake
 
-conn = psycopg2.connect(database = "postgres",
-                        user = "postgres",
-                        host = "localhost",
-                        password = "hello_122"
-)
-
-y_n = input("Is it you first enter? yes/no: ").lower()
-user_name = input("Input your name: ")
+db_snake.input_user()
 
 pygame.init()
 
@@ -203,7 +196,10 @@ class Level:
 
     # changes speed according to level by FPS
     def speed(self):
-        return 4 + self.num
+        if 4 + self.num < 60:
+            return 4 + self.num
+        else:
+            return 60
 
 
 # creates objects
@@ -212,6 +208,8 @@ snake = Snake()
 level = Level()
             
 clock = pygame.time.Clock()
+
+pause_game = False
 
 # GAME LOOP
 running = True
@@ -228,6 +226,12 @@ while running:
                 snake.change_to = "DOWN"
             elif event.key == pygame.K_UP:
                 snake.change_to = "UP"
+            
+            if event.key == pygame.K_SPACE:
+                pause_game = not pause_game
+
+            if event.key == pygame.K_LSHIFT and pause_game == True:
+                db_snake.process_score(snake.score, level.num)
         if event.type == FOOD_TIME_EVENT:
             food.generate_random_pos(snake.body)
 
@@ -236,55 +240,40 @@ while running:
 
     draw_grid("black") # grids are black
 
-    snake.move()
+    if not pause_game:
+        snake.move()
+        
+        # checks for collision with body
+        if snake.check_collision_body(food):
+            running = False 
+            # print(level.num)
+            db_snake.process_score(snake.score, level.num)
+            game_over(snake.score, level.num) # shows "Game Over" screen
 
-    
-    # checks for collision with body
-    if snake.check_collision_body(food):
-        running = False 
-        # print(level.num)
-        game_over(snake.score, level.num) # shows "Game Over" screen
+        # checks collision with food
+        snake.check_collision(food)
 
-    # checks collision with food
-    snake.check_collision(food)
+        # checks score
+        level.check_score(snake)
 
-    # checks score
-    level.check_score(snake)
+        # draws food and snake, changes background according to level
+        if level.num == 1:
+            snake.draw()
+            food.draw()
+        else:
+            level.levels(snake, food)
 
-    # draws food and snake, changes background according to level
-    if level.num == 1:
-        snake.draw()
-        food.draw()
-    else:
-        level.levels(snake, food)
+        # displaying weight of food
+        text_food_weight = font_food_weight.render(f"{food.weight}", True, "red") 
+        screen.blit(text_food_weight, (food.pos.x * CELL + 5, food.pos.y * CELL))
 
-    # displaying weight of food
-    text_food_weight = font_food_weight.render(f"{food.weight}", True, "red") 
-    screen.blit(text_food_weight, (food.pos.x * CELL + 5, food.pos.y * CELL))
+        # speed of level
+        FPS = level.speed()
 
-    # speed of level
-    FPS = level.speed()
-
-    # displaying score and level while playing
-    display_attribute(snake.score, level.num)
-    
+        # displaying score and level while playing
+        display_attribute(snake.score, level.num)
+        
     pygame.display.flip() # updates screen
     clock.tick(FPS) # Frame numbers per second
 
 pygame.quit()
-
-with conn.cursor() as cursor:
-    # table = "CREATE TABLE snake_users (ID SERIAL PRIMARY KEY, User_Name VARCHAR(30), Score INTEGER, Level INTEGER)"
-    # cursor.execute(table)
-    # conn.commit()
-
-    if y_n in ["y", "yes"]:
-        sql = "INSERT INTO snake_users(User_Name, Score, Level) VALUES (%s, %s, %s)"
-        cursor.execute(sql, (user_name, snake.score, level.num))
-        conn.commit()
-    elif y_n in ["n", "no"]:
-        sql = "UPDATE snake_users SET Score = %s, Level = %s WHERE Name = %s"
-        cursor.execute(sql, (snake.score, level.num, user_name))
-        conn.commit()
-    
-conn.close()
